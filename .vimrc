@@ -1,4 +1,7 @@
-echo "It's VIM Time"
+"To use this vimrc in neovim, source this file in .config/nvim/init.vim
+
+"brew intall neovim << to use neovim
+echo "It's NEOVIM Time"
 
 set number                     " Show current line number
 set relativenumber             " Show relative line numbers
@@ -38,7 +41,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 "Begin plugins
-call plug#begin()
+"call plug#begin() << for vim
+"Run the following command for neovim
+"curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+call plug#begin('~/.local/share/nvim/plugged')
 
 "General plugins
 Plug 'scrooloose/nerdtree'         "NERDtree plugin
@@ -50,14 +56,27 @@ Plug 'tpope/vim-unimpaired'         " easy mapping for buffer toggling https://g
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }     " PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run the install script
 Plug 'junegunn/fzf.vim'               " Required with fzf (do both)
 Plug 'vim-scripts/l9'                 " required for FuzzyFinder
+Plug 'altercation/vim-colors-solarized' "Solarized
 
-" Useful Dev Plugins
+"Useful Dev Plugins
 Plug 'jiangmiao/auto-pairs'  " automatically insert matching brackets
 Plug 'w0rp/ale'  " super fast linter
 Plug 'Shougo/deoplete.nvim' " autocomplete
 Plug 'scrooloose/nerdcommenter' " keyboard shortcut to comment out a block of text
+Plug 'tpope/vim-fugitive' " git features
+Plug 'tpope/vim-rhubarb'  "Needed to enable :Gblame
+Plug 'easymotion/vim-easymotion' "Hotspot navigation with <Leader><Leader>w
+Plug 'andrewradev/splitjoin.vim' "brackets into do end blocks
+Plug 'pangloss/vim-javascript' "JS Highlighter
+Plug 'mxw/vim-jsx' "JSX Highlighter
 
 call plug#end()
+
+"Solarized theme
+syntax enable
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
 
 "Map commands
 let mapleader=" "   " map space to leader
@@ -80,7 +99,7 @@ let g:airline_symbols.space = "\ua0"
 " FZF
 map <C-b> :Buffers<CR>
 map <C-f> :Ag<CR>
-"map <C-m> :History<CR>
+map <C-m> :History<CR>
 map <C-p> :Files<CR>
 map <C-t> :Tags<CR>
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)

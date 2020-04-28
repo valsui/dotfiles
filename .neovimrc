@@ -56,16 +56,29 @@ Plug 'tpope/vim-unimpaired'         " easy mapping for buffer toggling https://g
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }     " PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run the install script
 Plug 'junegunn/fzf.vim'               " Required with fzf (do both)
 Plug 'vim-scripts/l9'                 " required for FuzzyFinder
+Plug 'altercation/vim-colors-solarized' "Solarized
 
-" Useful Dev Plugins
+"Useful Dev Plugins
 Plug 'jiangmiao/auto-pairs'  " automatically insert matching brackets
 Plug 'w0rp/ale'  " super fast linter
-"Plug 'Shougo/deoplete.nvim' " autocomplete
+Plug 'Shougo/deoplete.nvim' " autocomplete
 Plug 'scrooloose/nerdcommenter' " keyboard shortcut to comment out a block of text
 Plug 'tpope/vim-fugitive' " git features
 Plug 'tpope/vim-rhubarb'  "Needed to enable :Gblame
+Plug 'easymotion/vim-easymotion' "Hotspot navigation with <Leader><Leader>w
+Plug 'andrewradev/splitjoin.vim' "brackets into do end blocks
+Plug 'pangloss/vim-javascript' "JS Highlighter
+Plug 'mxw/vim-jsx' "JSX Highlighter
+Plug 'tpope/vim-surround' "Surround text with html tags, quotes, and brackets with vs and cs
+Plug 'tpope/vim-abolish' "Easier substitution and coercion
 
 call plug#end()
+
+"Solarized theme
+syntax enable
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
 
 "Map commands
 let mapleader=" "   " map space to leader
@@ -88,7 +101,7 @@ let g:airline_symbols.space = "\ua0"
 " FZF
 map <C-b> :Buffers<CR>
 map <C-f> :Ag<CR>
-"map <C-m> :History<CR>
+map <C-m> :History<CR>
 map <C-p> :Files<CR>
 map <C-t> :Tags<CR>
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
@@ -104,6 +117,10 @@ nmap <C-J> <C-W><C-J>
 nmap <C-K> <C-W><C-K>
 nmap <C-L> <C-W><C-L>
 nmap <C-H> <C-W><C-H>
+
+" Copy the current file paths
+nmap <leader>ys :let @*=expand("%")<CR>
+nmap <leader>yl :let @*=expand("%:p")<CR>
 
 " Ale config
 let g:ale_completion_enabled = 1

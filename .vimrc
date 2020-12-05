@@ -33,7 +33,11 @@ set expandtab
 " I guess this only works if you have +clipboard
 set clipboard+=unnamed
 
-" Will load vim-plug if not there
+" setting max characters per line
+set colorcolumn=120
+set textwidth=120
+
+"Will load vim-plug if not there
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -61,14 +65,21 @@ Plug 'altercation/vim-colors-solarized' "Solarized
 "Useful Dev Plugins
 Plug 'jiangmiao/auto-pairs'  " automatically insert matching brackets
 Plug 'w0rp/ale'  " super fast linter
-Plug 'Shougo/deoplete.nvim' " autocomplete
+"Plug 'Shougo/deoplete.nvim' " autocomplete
 Plug 'scrooloose/nerdcommenter' " keyboard shortcut to comment out a block of text
 Plug 'tpope/vim-fugitive' " git features
 Plug 'tpope/vim-rhubarb'  "Needed to enable :Gblame
 Plug 'easymotion/vim-easymotion' "Hotspot navigation with <Leader><Leader>w
 Plug 'andrewradev/splitjoin.vim' "brackets into do end blocks
 Plug 'pangloss/vim-javascript' "JS Highlighter
+Plug 'leafgarland/typescript-vim' " TypeScript syntax
 Plug 'mxw/vim-jsx' "JSX Highlighter
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'tpope/vim-surround' "Surround text with html tags, quotes, and brackets with vs and cs
+Plug 'tpope/vim-abolish' "Easier substitution and coercion
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
 call plug#end()
 
@@ -84,6 +95,8 @@ let mapleader=" "   " map space to leader
 " NERDTree commands
 nmap <leader>pt :NERDTreeTabsToggle<CR>
 nmap <leader>pf :NERDTreeFind<CR>
+let g:NERDTreeWinSize=50
+let NERDTreeShowHidden=1
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -116,6 +129,10 @@ nmap <C-K> <C-W><C-K>
 nmap <C-L> <C-W><C-L>
 nmap <C-H> <C-W><C-H>
 
+" Copy the current file paths
+nmap <leader>ys :let @*=expand("%")<CR>
+nmap <leader>yl :let @*=expand("%:p")<CR>
+
 " Ale config
 let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
@@ -124,17 +141,18 @@ highlight ALEWarningSign ctermbg=Black
 highlight ALEErrorSign ctermbg=Black
 
 " Deoplete config
-let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-augroup Deoplete
-  autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup end
+"let g:deoplete#enable_at_startup = 1
+"" let g:deoplete#sources#jedi#python_path = 'python3'
+"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+"augroup Deoplete
+  "autocmd!
+  "autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+  "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"augroup end
 
 " Whitespace
 let g:better_whitespace_enabled=1
@@ -145,6 +163,26 @@ let g:strip_whitespace_confirm=0
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+
+" CoC autocomplete
+let g:coc_global_extensions = [ 'coc-tsserver' ]
+if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+  let g:coc_global_extensions += ['coc-prettier']
+endif
+if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+  let g:coc_global_extensions += ['coc-eslint']
+endif
+" Show autocomplete when Tab is pressed
+inoremap <silent><expr> <Tab> coc#refresh()
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 "" Setting up directory navigation - for :netrw (NOT the NERDtree plugin)
 "

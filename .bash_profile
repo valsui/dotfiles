@@ -1,11 +1,13 @@
 eval "$(rbenv init -)"
 export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
 export PATH="~/bin:$PATH"
-export PATH="/usr/local/Cellar/postgresql@10/10.9/bin:$PATH"
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+# instead of the path below, can also use `brew link postgresql@10``
+export PATH="/usr/local/Cellar/postgresql@10/10.14/bin:$PATH"
+#export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+#export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+#export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+#export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
 
 #set default editor
 export VISUAL=nvim
@@ -59,6 +61,11 @@ PS1+="\$(git_branch)"           # prints current branch
 PS1+="\[$COLOR_BLUE\]\$\[$COLOR_RESET\] "   # '#' for root, else '$'
 export PS1
 
+function sv()
+{
+  branch=$(git symbolic-ref HEAD 2> /dev/null)
+  git push origin ${branch} $1
+}
 # nvm
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
@@ -71,12 +78,19 @@ alias gdb='git branch --merged | egrep -v "(^\*|master|staging)" | xargs git bra
 alias be='bundle exec'
 alias ber='bundle exec rspec'
 alias beri="bundle exec rspec --exclude-pattern 'spec/features/**/*_spec.rb'"
+alias besr='bundle exec spring rspec'
 alias upg='cd $(git rev-parse --show-toplevel)'
-alias hosts='vi /etc/hosts'
+alias hosts='vim /etc/hosts'
 alias gco='git checkout'
 alias dgssh='./dgssh'
 alias vim='nvim'
 alias vimrc='nvim ~/.vimrc'
 alias bp='nvim ~/.bash_profile'
 alias sbp='source ~/.bash_profile'
-alias ptest="rails parallel:spec['spec\/(?!features)']"
+alias ptest="RAILS_ENV=test bundle exec rails parallel:spec['spec\/(?!features)']"
+alias be_precompile="bundle exec rake assets:precompile"
+alias dev_server="bin/webpack-dev-server"
+alias jobs_start="rake jobs:work"
+alias dc='docker-compose'
+alias rubocop_modified='(git ls-files -m & git diff-tree -r --no-commit-id --name-only master@\{u\} head) | xargs ls -1 2>/dev/null | grep '\.rb$' | xargs rubocop -a'
+alias rcop_all='bundle exec rubocop -a'
